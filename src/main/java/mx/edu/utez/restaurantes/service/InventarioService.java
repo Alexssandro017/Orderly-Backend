@@ -5,8 +5,7 @@ import mx.edu.utez.restaurantes.repository.InventarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class InventarioService {
@@ -45,5 +44,21 @@ public class InventarioService {
     public List<Inventario> obtenerArticulosPorIds(List<Long> ids) {
         return inventarioRepository.findAllByIds(ids);
     }
+
+    public List<Map<String, Object>> listarCategoriasConConteo() {
+        List<Object[]> categoriasConConteo = inventarioRepository.findCategoriasWithCount();
+
+        // Crear una lista de Mapas para devolver en un formato adecuado
+        List<Map<String, Object>> resultado = new ArrayList<>();
+        for (Object[] obj : categoriasConConteo) {
+            Map<String, Object> categoriaData = new HashMap<>();
+            categoriaData.put("categoria", obj[0]);
+            categoriaData.put("items", obj[1]);
+            resultado.add(categoriaData);
+        }
+
+        return resultado;
+    }
+
 
 }

@@ -92,4 +92,11 @@ public class InventarioController {
         List<String> categorias = inventarioService.listarCategoriasUnicas();
         return ResponseEntity.ok(categorias);
     }
+
+    @GetMapping("/categorias/items")
+    public ResponseEntity<List<Map<String, Object>>> listarCategoriasConConteo() {
+        List<Map<String, Object>> categoriasConConteo = inventarioService.listarCategoriasConConteo();
+        return ResponseEntity.ok(categoriasConConteo);
+    }
+
 }

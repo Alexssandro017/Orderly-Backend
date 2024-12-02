@@ -19,4 +19,8 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
     // Recuperar una lista de artículos por una lista de IDs
     @Query("SELECT i FROM Inventario i WHERE i.id IN :ids")
     List<Inventario> findAllByIds(@Param("ids") List<Long> ids);
+
+    @Query("SELECT i.categoria, COUNT(i) FROM Inventario i GROUP BY i.categoria")
+    List<Object[]> findCategoriasWithCount();
+
 }
