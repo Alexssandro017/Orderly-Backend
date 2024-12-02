@@ -17,10 +17,6 @@ public class Inventario {
     @Column(nullable = false, length = 50)
     private String nombre;
 
-    /*
-    @Column(nullable = true)
-    private Integer cantidad;
-     */
     @Column(nullable = false)
     private Double precio;
 

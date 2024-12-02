@@ -1,5 +1,6 @@
 package mx.edu.utez.restaurantes.service;
 
+import mx.edu.utez.restaurantes.dto.OrdenesCompletadasResponse;
 import mx.edu.utez.restaurantes.model.Inventario;
 import mx.edu.utez.restaurantes.model.Orden;
 import mx.edu.utez.restaurantes.repository.OrdenRepository;
@@ -73,4 +74,47 @@ public class OrdenService {
         }
         return null;
     }
+
+
+    // Método para convertir Orden a OrdenResponse
+    private OrdenesCompletadasResponse convertirOrdenAResponse(List<Orden> ordenes) {
+        OrdenesCompletadasResponse response = new OrdenesCompletadasResponse();
+        List<OrdenesCompletadasResponse.OrdenResponse> ordenesResponse = new ArrayList<>();
+        Double sumaTotal = 0.0;
+
+        for (Orden orden : ordenes) {
+            OrdenesCompletadasResponse.OrdenResponse ordenResponse = new OrdenesCompletadasResponse.OrdenResponse();
+            ordenResponse.setId(orden.getId());
+            ordenResponse.setMesero(orden.getMesero());
+            ordenResponse.setMesa(orden.getMesa());
+            ordenResponse.setEstatus(orden.getEstatus());
+            ordenResponse.setPrecioTotal(orden.getPrecioTotal());
+
+            List<OrdenesCompletadasResponse.OrdenResponse.ArticuloResponse> articulosResponse = new ArrayList<>();
+            for (int i = 0; i < orden.getArticulos().size(); i++) {
+                OrdenesCompletadasResponse.OrdenResponse.ArticuloResponse articuloResponse = new OrdenesCompletadasResponse.OrdenResponse.ArticuloResponse();
+                articuloResponse.setId(orden.getArticulos().get(i).getId());
+                articuloResponse.setNombre(orden.getArticulos().get(i).getNombre());
+                articuloResponse.setCantidad(orden.getCantidades().get(i));
+                articuloResponse.setPrecioUnitario(orden.getArticulos().get(i).getPrecio());
+                articuloResponse.setPrecioTotal(orden.getArticulos().get(i).getPrecio() * orden.getCantidades().get(i));
+                articulosResponse.add(articuloResponse);
+            }
+
+            ordenResponse.setArticulos(articulosResponse);
+            ordenesResponse.add(ordenResponse);
+            sumaTotal += orden.getPrecioTotal(); // Sumar el precio total de la orden
+        }
+
+        response.setOrdenes(ordenesResponse);
+        response.setSumaTotalOrdenes(sumaTotal); // Establecer la suma total
+        return response;
+    }
+
+    public OrdenesCompletadasResponse listarOrdenesCompletadasPorMesa(String mesa) {
+        List<Orden> ordenes = ordenRepository.findByEstatusAndMesaIgnoreCase("completada", mesa);
+        return convertirOrdenAResponse(ordenes);
+    }
+
+
 }

@@ -1,7 +1,9 @@
 package mx.edu.utez.restaurantes.controller;
 
+import mx.edu.utez.restaurantes.dto.EstatusDTO;
 import mx.edu.utez.restaurantes.dto.OrdenRequest;
 import mx.edu.utez.restaurantes.dto.OrdenResponse;
+import mx.edu.utez.restaurantes.dto.OrdenesCompletadasResponse;
 import mx.edu.utez.restaurantes.model.Orden;
 import mx.edu.utez.restaurantes.service.OrdenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,10 +48,11 @@ public class OrdenController {
 
     // Actualizar el estatus de una orden
     @PutMapping("/{id}")
-    public ResponseEntity<Orden> actualizarEstatus(@PathVariable Long id, @RequestBody String estatus) {
-        Orden ordenActualizada = ordenService.actualizarEstatus(id, estatus);
+    public ResponseEntity<Orden> actualizarEstatus(@PathVariable Long id, @RequestBody EstatusDTO estatusDTO) {
+        Orden ordenActualizada = ordenService.actualizarEstatus(id, estatusDTO.getEstatus());
         return (ordenActualizada != null) ? ResponseEntity.ok(ordenActualizada) : ResponseEntity.notFound().build();
     }
+
 
     @GetMapping
     public ResponseEntity<List<OrdenResponse>> listarOrdenes() {
@@ -91,4 +94,14 @@ public class OrdenController {
         response.setArticulos(articulosResponse);
         return response;
     }
+
+
+    @GetMapping("/completadas/{mesa}")
+    public ResponseEntity<OrdenesCompletadasResponse> listarOrdenesCompletadasPorMesa(
+            @PathVariable String mesa) {
+        OrdenesCompletadasResponse respuesta = ordenService.listarOrdenesCompletadasPorMesa(mesa);
+        return (respuesta != null) ? ResponseEntity.ok(respuesta) : ResponseEntity.notFound().build();
+    }
+
+
 }
