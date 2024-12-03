@@ -42,4 +42,9 @@ public class Orden {
     // Precio total de la orden
     @Column(nullable = false)
     private Double precioTotal = 0.0;
+
+    @ManyToOne
+    @JoinColumn(name = "factura_id", nullable = true)
+    private Factura factura;
+
 }
