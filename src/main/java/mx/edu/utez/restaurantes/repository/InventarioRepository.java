@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface InventarioRepository extends JpaRepository<Inventario, Long> {
@@ -22,5 +23,8 @@ public interface InventarioRepository extends JpaRepository<Inventario, Long> {
 
     @Query("SELECT i.categoria, COUNT(i) FROM Inventario i GROUP BY i.categoria")
     List<Object[]> findCategoriasWithCount();
+
+    Optional<Inventario> findByNombre(String nombre);
+
 
 }
